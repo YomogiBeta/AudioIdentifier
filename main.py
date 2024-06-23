@@ -1,5 +1,5 @@
-# from AudioController.AudioControllerClient import AudioControllerClient
-# from AudioController.AudioControllerServer import AudioControllerServer
+from AudioController.AudioControllerClient import AudioControllerClient
+from AudioController.AudioControllerServer import AudioControllerServer
 from AudioIdentifier import AudioIdentifier
 import sounddevice as sd
 import sys
@@ -21,35 +21,36 @@ def check_port(aPort):
 
 if __name__ == '__main__':
     # Unity 連携コード
-    # aServerPort = sys.argv[1]
-    # aMySelfPort = sys.argv[2]
-    # check_port(aServerPort)
-    # check_port(aMySelfPort)
+    aServerPort = sys.argv[1]
+    aMySelfPort = sys.argv[2]
+    check_port(aServerPort)
+    check_port(aMySelfPort)
 
-    # client = AudioControllerClient(int(aServerPort))
-    # server = AudioControllerServer(int(aMySelfPort), client)
-    # audio_identifier = AudioIdentifier(client)
+    client = AudioControllerClient(int(aServerPort))
+    server = AudioControllerServer(int(aMySelfPort), client)
+    audio_identifier = AudioIdentifier(client)
 
-    # def task():
-    #     with sd.InputStream(channels=audio_identifier.chennels(),
-    #                         samplerate=audio_identifier.rate(),
-    #                         dtype='float32',
-    #                         callback=audio_identifier.audio_callback):
-    #         print("Recording... Press Ctrl+C to stop.")
-    #         while client.is_running():
-    #             sd.sleep(int(audio_identifier.duration() * 1000))
+    def task():
+        with sd.InputStream(channels=audio_identifier.chennels(),
+                            samplerate=audio_identifier.rate(),
+                            dtype='float32',
+                            callback=audio_identifier.audio_callback):
+            print("Recording... Press Ctrl+C to stop.")
+            while client.is_running():
+                sd.sleep(int(audio_identifier.duration() * 1000))
 
-    # client.start(task)
-    # server.start()
+    client.start(task)
+    server.start()
 
-    # server.thread().join()
-    # client.thread().join()
+    server.thread().join()
+    client.thread().join()
 
-    audio_identifier = AudioIdentifier(None)
-    with sd.InputStream(channels=audio_identifier.chennels(),
-                        samplerate=audio_identifier.rate(),
-                        dtype='float32',
-                        callback=audio_identifier.audio_callback):
-        print("Recording... Press Ctrl+C to stop.")
-        while True:
-            sd.sleep(int(audio_identifier.duration() * 1000))
+    # ターミナル稼働テスト用
+    # audio_identifier = AudioIdentifier(None)
+    # with sd.InputStream(channels=audio_identifier.chennels(),
+    #                     samplerate=audio_identifier.rate(),
+    #                     dtype='float32',
+    #                     callback=audio_identifier.audio_callback):
+    #     print("Recording... Press Ctrl+C to stop.")
+    #     while True:
+    #         sd.sleep(int(audio_identifier.duration() * 1000))

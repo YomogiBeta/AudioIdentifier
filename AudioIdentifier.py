@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+import time as libTime
 
 from AudioController.AudioControllerClient import AudioControllerClient
 
@@ -29,6 +30,8 @@ class AudioIdentifier:
 
         self._anAudioList = []
         self._aSecondIndex = 0
+        self._aSendTimeStamp = 0
+        self._aStopTime = 0.1
 
         self._check_items = ["Hands",
                              "Clapping",
@@ -105,6 +108,15 @@ class AudioIdentifier:
                 self._client.send(a_text)
             else:
                 print(f"Predicted label: {a_text}")
+            self._aSendTimeStamp = libTime.time()
+
+    def setting_stop_time(self, item):
+        a_text = self._io_dict.get(item)
+        if a_text:
+            if a_text == "DESK":
+                self._aStopTime = 0.1
+            else:
+                self._aStopTime = 0.2
 
     def identification_send(self, force_clear=False):
         waveform = np.concatenate(self._anAudioList)
@@ -117,10 +129,16 @@ class AudioIdentifier:
 
         if item is not False:
             self.print_class(item)
+            self.setting_stop_time(item)
 
     def audio_callback(self, indata, frames, time, status):
         if status:
             print(f"Error: {status}")
+
+        if self._aSendTimeStamp != 0 and libTime.time() - self._aSendTimeStamp < self._aStopTime:
+            return
+
+        # self._aSecondIndex = 0
 
         # Convert input data to float32 array
         waveform = np.array(indata[:, 0], dtype=np.float32)
@@ -138,10 +156,7 @@ class AudioIdentifier:
         if self._aSecondIndex >= 0.28:
             self.identification_send()
 
-        if self._aSecondIndex >= 0.1:
-            self.identification_send()
-
-        if self._aSecondIndex >= 0.05:
+        if self._aSecondIndex >= 0.16:
             self.identification_send()
 
     def chennels(self):
