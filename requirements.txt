@@ -1,3 +1,7 @@
+# dependencies
 sounddevice
 tensorflow
 numpy
+
+# dev dependencies
+cx_Freeze

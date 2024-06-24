@@ -19,7 +19,7 @@ def check_port(aPort):
     return aPort
 
 
-if __name__ == '__main__':
+if __name__ in ('__main__', 'audioidentifier__main__', 'AudioIdentifier_main__'):
     # Unity 連携コード
     aServerPort = sys.argv[1]
     aMySelfPort = sys.argv[2]

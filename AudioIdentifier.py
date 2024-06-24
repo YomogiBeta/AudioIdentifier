@@ -1,13 +1,16 @@
 import tensorflow as tf
 import numpy as np
 import time as libTime
+import sys
+import os
 
 from AudioController.AudioControllerClient import AudioControllerClient
 
 
 class AudioIdentifier:
 
-    _model_path = '1.tflite'
+    _model_path = f'resource{os.sep}1.tflite'
+    _mapping_path = f'resource{os.sep}yamnet_class_map.csv'
     # Parameters for audio stream
     _CHANNELS = 1
     _RATE = 15600
@@ -16,15 +19,34 @@ class AudioIdentifier:
 
     _SOUND_DEVICE_STEP = 0.026
 
+    def _find_data_file(self, filename):
+        """frozen状況に合わせて引数のファイル名のファイルパスを取得する
+
+        https://cx-freeze.readthedocs.io/en/latest/faq.html#data-files
+
+        Args:
+            filename (str):
+                ファイル名.
+
+        Returns:
+            str:
+                引数のファイル名のファイルパス.
+        """
+        if getattr(sys, "frozen", False):
+            datadir = os.path.dirname(sys.executable)
+        else:
+            datadir = os.path.abspath(".")
+        return os.path.join(datadir, filename)
+
     def __init__(self, client):
         self._client: AudioControllerClient = client
-        self._interpreter = tf.lite.Interpreter(self._model_path)
+        self._interpreter = tf.lite.Interpreter(self._find_data_file(self._model_path))
         self._input_details = self._interpreter.get_input_details()
         self._waveform_input_index = self._input_details[0]['index']
         self._output_details = self._interpreter.get_output_details()
         self._scores_output_index = self._output_details[0]['index']
 
-        a_class_labels_file = open('yamnet_class_map.csv', 'r')
+        a_class_labels_file = open(self._find_data_file(self._mapping_path), 'r')
         a_labels_list = [line.strip() for line in a_class_labels_file]
         self._a_class_labels = [label.split(',')[2] for label in a_labels_list]
 
