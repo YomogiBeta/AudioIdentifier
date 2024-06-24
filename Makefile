@@ -7,3 +7,6 @@ test:
 
 windows-build:
 	python setup.py bdist_msi
+
+mac-build:
+	python setup.py bdist_dmg

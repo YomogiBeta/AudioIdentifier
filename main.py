@@ -5,29 +5,29 @@ import sounddevice as sd
 import sys
 
 
-def check_port(aPort):
-    if not aPort.isnumeric():
+def check_port(a_port):
+    if not a_port.isnumeric():
         print("Please input a number.")
         sys.exit()
 
-    aPort = int(aPort)
+    a_port = int(a_port)
 
-    if aPort < 1024 or aPort > 65535:
+    if a_port < 1024 or a_port > 65535:
         print("Please input a number between 1024 and 65535.")
         sys.exit()
 
-    return aPort
+    return a_port
 
 
 if __name__ in ('__main__', 'audioidentifier__main__', 'AudioIdentifier_main__'):
     # Unity 連携コード
-    aServerPort = sys.argv[1]
-    aMySelfPort = sys.argv[2]
-    check_port(aServerPort)
-    check_port(aMySelfPort)
+    a_server_port = sys.argv[1]
+    a_myself_port = sys.argv[2]
+    check_port(a_server_port)
+    check_port(a_myself_port)
 
-    client = AudioControllerClient(int(aServerPort))
-    server = AudioControllerServer(int(aMySelfPort), client)
+    client = AudioControllerClient(int(a_server_port))
+    server = AudioControllerServer(int(a_myself_port), client)
     audio_identifier = AudioIdentifier(client)
 
     def task():

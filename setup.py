@@ -15,11 +15,11 @@ build_exe_options = {
 
 bdist_mac_options = {
     # "iconfile": "resource/icon.ico",
-    "bundle_name": "AudioIdentifier for hacku",
+    "bundle_name": "AudioIdentifier_for_hacku",
 }
 
 bdist_dmg_options = {
-    "volume_label": "AudioIdentifier Installer",
+    "volume_label": "AudioIdentifier_Installer",
     "applications_shortcut": False,
 }
 

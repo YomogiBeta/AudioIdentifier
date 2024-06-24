@@ -42,6 +42,8 @@ class AudioIdentifier:
         self._client: AudioControllerClient = client
         self._interpreter = tf.lite.Interpreter(self._find_data_file(self._model_path))
         self._input_details = self._interpreter.get_input_details()
+        # self._interpreter.experimental_options = {'use_gpu': True}
+        # self._interpreter.allocate_tensors()
         self._waveform_input_index = self._input_details[0]['index']
         self._output_details = self._interpreter.get_output_details()
         self._scores_output_index = self._output_details[0]['index']
