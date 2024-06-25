@@ -63,7 +63,9 @@ class AudioIdentifier:
                              "Knock",
                              "Bouncing",
                              "Wood block",
-                             "Door"]
+                             "Door",
+                             "Tick",
+                             "Clock"]
         self._io_dict = {
             "Hands": "CLAP",
             "Clapping": "CLAP",
@@ -71,7 +73,9 @@ class AudioIdentifier:
             "Knock": "DESK",
             "Bouncing": "DESK",
             "Wood block": "DESK",
-            "Door": "DESK"
+            "Door": "DESK",
+            "Tick": "DESK",
+            "Clock": "DESK"
         }
 
     def preprocess_audio(self, waveform):
